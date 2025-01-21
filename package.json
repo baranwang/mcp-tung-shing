@@ -1,0 +1,43 @@
+{
+  "name": "mcp-tung-shing",
+  "version": "1.0.0",
+  "description": "A Model Context Protocol plugin for Chinese Tung Shing (黄历/通勝/通胜) almanac calculations",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "mcp-tung-shing": "./dist/index.cjs"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "rslib build",
+    "check": "biome check --write",
+    "dev": "rslib build --watch",
+    "format": "biome format --write",
+    "pretest": "rslib build",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.3.0",
+    "dayjs": "^1.11.13",
+    "dayjs-plugin-lunar": "^1.4.0",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.9.2",
+    "@rslib/core": "^0.3.2",
+    "@types/node": "^22.8.1",
+    "typescript": "^5.7.3",
+    "vitest": "^3.0.1"
+  }
+}
