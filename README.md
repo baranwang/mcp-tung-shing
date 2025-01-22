@@ -2,6 +2,8 @@
 
 黄历 MCP
 
+<a href="https://glama.ai/mcp/servers/vylgy8vab2"><img width="380" height="200" src="https://glama.ai/mcp/servers/vylgy8vab2/badge" alt="mcp-tung-shing MCP server" /></a>
+
 ## Usage
 
 ### npx
