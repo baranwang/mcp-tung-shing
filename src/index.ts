@@ -1,31 +1,36 @@
 #!/usr/bin/env node
 
-import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import dayjs from 'dayjs';
 import { z } from 'zod';
 import { PluginLunar } from 'dayjs-plugin-lunar';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
+import { Server } from '@modelcontextprotocol/sdk/server/index.js';
+import {
+  CallToolRequestSchema,
+  ListToolsRequestSchema,
+} from '@modelcontextprotocol/sdk/types.js';
+import { zodToJsonSchema } from 'zod-to-json-schema';
 
 dayjs.extend(PluginLunar);
+
+function handleDirection(direction: string) {
+  const result = direction;
+  switch (result) {
+    case '东':
+    case '南':
+    case '西':
+    case '北':
+      return `正${result}`;
+    default:
+      return result;
+  }
+};
 
 function getHourlyAlmanac(date: dayjs.Dayjs) {
   const lunarHour = date.toLunarHour();
   const sixtyCycle = lunarHour.getSixtyCycle();
   const heavenStem = sixtyCycle.getHeavenStem();
   const earthBranch = sixtyCycle.getEarthBranch();
-
-  const handleDirection = (direction: string) => {
-    const result = direction;
-    switch (result) {
-      case '东':
-      case '南':
-      case '西':
-      case '北':
-        return `正${result}`;
-      default:
-        return result;
-    }
-  };
 
   return {
     hour: date.format('LH'),
@@ -160,43 +165,71 @@ function formatToMarkdown(almanac: ReturnType<typeof getDailyAlmanac>) {
   return result;
 }
 
-const server = new McpServer({
-  name: 'Tung Shing',
-  version: process.env.PACKAGE_VERSION ?? '0.0.0',
-});
-
-server.tool(
-  'get-tung-shing',
+const server = new Server(
   {
-    startDate: z
-      .string()
-      .describe('The start date as a string in the format "YYYY-MM-DD"'),
-    days: z
-      .number()
-      .int()
-      .min(1)
-      .optional()
-      .default(1)
-      .describe('The number of consecutive days to retrieve'),
+    name: 'Tung Shing',
+    version: process.env.PACKAGE_VERSION ?? '0.0.0',
   },
-  async ({ startDate, days }) => {
-    const start = dayjs(startDate);
-    if (!start.isValid()) {
-      throw new Error('Invalid date');
-    }
-
-    return {
-      content: Array.from({ length: days }, (_, i) =>
-      ({
-        type: 'text',
-        text: formatToMarkdown(getDailyAlmanac(start.add(i, 'day')))
-      }),
-      )
-    };
+  {
+    capabilities: {
+      tools: {},
+    },
   },
 );
+
+const getTungShingParamsSchema = z.object({
+  startDate: z
+    .string()
+    .optional()
+    .default(dayjs().format('YYYY-MM-DD'))
+    .describe('The start date as a string in the format "YYYY-MM-DD"'),
+  days: z
+    .union([
+      z.number().int().min(1),
+      z
+        .string()
+        .regex(/^\d+$/)
+        .transform((val) => Number.parseInt(val)),
+    ])
+    .optional()
+    .default(1)
+    .describe('The number of consecutive days to retrieve'),
+});
+
+server.setRequestHandler(ListToolsRequestSchema, () => ({
+  tools: [
+    {
+      name: 'get-tung-shing',
+      description: 'Get the daily almanac from Tung Shing',
+      inputSchema: zodToJsonSchema(getTungShingParamsSchema),
+    },
+  ],
+}));
+
+server.setRequestHandler(CallToolRequestSchema, async (request) => {
+  switch (request.params.name) {
+    case 'get-tung-shing': {
+      const { startDate, days } = getTungShingParamsSchema.parse(
+        request.params.arguments,
+      );
+      const start = dayjs(startDate);
+      if (!start.isValid()) {
+        throw new Error('Invalid date');
+      }
+      return {
+        content: Array.from({ length: days }, (_, i) => ({
+          type: 'text',
+          text: formatToMarkdown(getDailyAlmanac(start.add(i, 'day'))),
+        })),
+      };
+    }
+    default: {
+      throw new Error(`Unknown tool: ${request.params.name}`);
+    }
+  }
+});
 
 (async () => {
   const transport = new StdioServerTransport();
   await server.connect(transport);
-})()
+})();
