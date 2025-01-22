@@ -19,6 +19,21 @@
   "files": [
     "dist"
   ],
+  "keywords": [
+    "mcp",
+    "tung shing",
+    "almanac",
+    "calendar",
+    "lunar",
+    "chinese"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/baranwang/mcp-tung-shing"
+  },
+  "bugs": {
+    "url": "https://github.com/baranwang/mcp-tung-shing/issues"
+  },
   "scripts": {
     "build": "rslib build",
     "check": "biome check --write",
