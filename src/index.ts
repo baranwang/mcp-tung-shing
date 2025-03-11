@@ -39,7 +39,7 @@ function getHourlyAlmanac(date: dayjs.Dayjs) {
     content: [
       {
         key: '吉凶',
-        value: lunarHour.getMinorRen().getLuck().toString(),
+        value: lunarHour.getTwelveStar().getEcliptic().getLuck().toString(),
       },
       {
         key: '星神',
@@ -91,7 +91,7 @@ function getDailyAlmanac(date?: dayjs.Dayjs) {
     content: [
       {
         key: '吉凶',
-        value: lunarDay.getMinorRen().getLuck().toString(),
+        value: lunarDay.getTwelveStar().getEcliptic().getLuck().toString(),
       },
       {
         key: '五行',
