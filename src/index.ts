@@ -34,9 +34,15 @@ function getHourlyAlmanac(date: dayjs.Dayjs) {
 
   return {
     hour: date.format('LH'),
-    recommends: lunarHour.getRecommends().map(String),
-    avoids: lunarHour.getAvoids().map(String),
     content: [
+      {
+        key: '宜',
+        value: lunarHour.getRecommends().join('、'),
+      },
+      {
+        key: '忌',
+        value: lunarHour.getAvoids().join('、'),
+      },
       {
         key: '吉凶',
         value: lunarHour.getTwelveStar().getEcliptic().getLuck().toString(),
@@ -86,9 +92,15 @@ function getDailyAlmanac(date?: dayjs.Dayjs) {
     hours: Array.from({ length: 12 }, (_, i) =>
       getHourlyAlmanac(parsedDate.addLunar(i, 'dual-hour')),
     ),
-    recommends: lunarDay.getRecommends().map(String),
-    avoids: lunarDay.getAvoids().map(String),
     content: [
+      {
+        key: '宜',
+        value: lunarDay.getRecommends().join('、'),
+      },
+      {
+        key: '忌',
+        value: lunarDay.getAvoids().join('、'),
+      },
       {
         key: '吉凶',
         value: lunarDay.getTwelveStar().getEcliptic().getLuck().toString(),
@@ -129,41 +141,29 @@ function getDailyAlmanac(date?: dayjs.Dayjs) {
   };
 }
 
-function formatToMarkdown(almanac: ReturnType<typeof getDailyAlmanac>) {
-  let result = `# ${almanac.lunarDate}\n`;
-  result += `> ${almanac.date}\n\n`;
-  result += '## 宜忌\n\n';
-  result += '### 宜\n\n';
-  for (const item of almanac.recommends) {
-    result += `- ${item}\n`;
-  }
-  result += '\n### 忌\n\n';
-  for (const item of almanac.avoids) {
-    result += `- ${item}\n`;
-  }
-  result += '\n## 详细信息\n\n';
+function formatToText(almanac: ReturnType<typeof getDailyAlmanac>) {
+  let result = '<整体>\n';
+  result += `<农历>${almanac.lunarDate}</农历>\n`;
+  result += `<公历>${almanac.date}</公历>\n`;
   for (const item of almanac.content) {
-    result += `\n### ${item.key}\n\n`;
-    result += `${item.value}\n`;
+    if (item.value) {
+      result += `<${item.key}>${item.value}</${item.key}>\n`;
+    }
   }
-  result += '\n## 时辰\n\n';
+  result += '</整体>\n';
+
   for (const hour of almanac.hours) {
-    result += `### ${hour.hour}\n\n`;
-    result += '#### 宜\n\n';
-    for (const item of hour.recommends) {
-      result += `- ${item}\n`;
-    }
-    result += '\n#### 忌\n\n';
-    for (const item of hour.avoids) {
-      result += `- ${item}\n`;
-    }
+    result += `<${hour.hour}>\n`
     for (const item of hour.content) {
-      result += `\n#### ${item.key}\n\n`;
-      result += `${item.value}\n`;
+      if (item.value) {
+        result += `<${item.key}>${item.value}</${item.key}>\n`;
+      }
     }
+    result += `</${hour.hour}>\n`;
   }
   return result;
 }
+
 
 const server = new Server(
   {
@@ -219,7 +219,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       return {
         content: Array.from({ length: days }, (_, i) => ({
           type: 'text',
-          text: formatToMarkdown(getDailyAlmanac(start.add(i, 'day'))),
+          text: formatToText(getDailyAlmanac(start.add(i, 'day'))),
         })),
       };
     }
