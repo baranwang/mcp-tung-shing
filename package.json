@@ -1,6 +1,6 @@
 {
   "name": "mcp-tung-shing",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "A Model Context Protocol plugin for Chinese Tung Shing (黄历/通勝/通胜) almanac calculations",
   "type": "module",
   "exports": {
