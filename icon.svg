@@ -1,73 +1,21 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <!-- 背景 -->
-  <defs>
-    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#f5e6c4" />
-      <stop offset="100%" stop-color="#f8d59f" />
-    </linearGradient>
-    <filter id="paperTexture" x="-10%" y="-10%" width="120%" height="120%">
-      <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="5" result="noise" />
-      <feDisplacementMap in="SourceGraphic" in2="noise" scale="5" xChannelSelector="R" yChannelSelector="G" />
-    </filter>
-  </defs>
-  
-  <!-- 主背景 - 黄历纸张 -->
-  <rect x="56" y="56" width="400" height="400" rx="20" ry="20" fill="url(#bgGradient)" filter="url(#paperTexture)" />
-  
-  <!-- 红色边框 -->
-  <rect x="70" y="70" width="372" height="372" rx="12" ry="12" fill="none" stroke="#bc2f2f" stroke-width="8" />
-  
-  <!-- 传统格子线 -->
-  <g stroke="#bc2f2f" stroke-width="2" opacity="0.7">
-    <line x1="70" y1="180" x2="442" y2="180" />
-    <line x1="70" y1="256" x2="442" y2="256" />
-    <line x1="70" y1="332" x2="442" y2="332" />
-    <line x1="256" y1="70" x2="256" y2="442" />
-  </g>
-  
-  <!-- 中央圆形元素 - 代表天干地支循环 -->
-  <circle cx="256" cy="256" r="80" fill="#f03e3e" opacity="0.9" />
-  <circle cx="256" cy="256" r="70" fill="#ffdb58" />
-  
-  <!-- 八卦符号 -->
   <g transform="translate(256, 256)">
-    <!-- 阴阳鱼 -->
-    <path d="M0,-50 A50,50 0 0,1 0,50 A25,25 0 0,0 0,0 A25,25 0 0,1 0,-50" fill="#bc2f2f" />
-    <path d="M0,50 A50,50 0 0,1 0,-50 A25,25 0 0,0 0,0 A25,25 0 0,1 0,50" fill="#333" />
-    <circle cx="0" cy="-25" r="8" fill="#333" />
-    <circle cx="0" cy="25" r="8" fill="#bc2f2f" />
-  </g>
-  
-  <!-- 顶部装饰元素 - 传统图案 -->
-  <g transform="translate(256, 110)">
-    <path d="M-50,0 C-25,-15 -15,-35 0,-35 C15,-35 25,-15 50,0 C25,15 15,35 0,35 C-15,35 -25,15 -50,0Z" fill="#bc2f2f" />
-    <path d="M-30,0 C-15,-9 -9,-21 0,-21 C9,-21 15,-9 30,0 C15,9 9,21 0,21 C-9,21 -15,9 -30,0Z" fill="#ffdb58" />
-  </g>
-  
-  <!-- 底部装饰元素 - 传统图案镜像 -->
-  <g transform="translate(256, 402)">
-    <path d="M-50,0 C-25,-15 -15,-35 0,-35 C15,-35 25,-15 50,0 C25,15 15,35 0,35 C-15,35 -25,15 -50,0Z" fill="#bc2f2f" />
-    <path d="M-30,0 C-15,-9 -9,-21 0,-21 C9,-21 15,-9 30,0 C15,9 9,21 0,21 C-9,21 -15,9 -30,0Z" fill="#ffdb58" />
-  </g>
-  
-  <!-- 左侧装饰 - 传统中国符号 -->
-  <g transform="translate(110, 256)">
-    <path d="M0,-30 L10,-15 L-10,0 L10,15 L0,30 L-10,15 L10,0 L-10,-15 Z" fill="#bc2f2f" />
-  </g>
-  
-  <!-- 右侧装饰 - 传统中国符号镜像 -->
-  <g transform="translate(402, 256)">
-    <path d="M0,-30 L10,-15 L-10,0 L10,15 L0,30 L-10,15 L10,0 L-10,-15 Z" fill="#bc2f2f" />
-  </g>
-  
-  <!-- 月相图案 - 代表黄历的天文元素 -->
-  <g transform="translate(120, 120)">
-    <circle cx="0" cy="0" r="24" fill="#333" />
-    <path d="M0,-24 A24,24 0 0,1 0,24 A18,24 0 0,0 0,-24" fill="#ffdb58" />
-  </g>
-  
-  <g transform="translate(392, 120)">
-    <circle cx="0" cy="0" r="24" fill="#333" />
-    <path d="M0,-24 A24,24 0 0,0 0,24 A18,24 0 0,1 0,-24" fill="#ffdb58" />
+    <g>
+      <path d="M0,-220 A220,220 0 0,1 0,220 A110,110 0 0,0 0,0 A110,110 0 0,1 0,-220" fill="#111" />
+      <path d="M0,220 A220,220 0 0,1 0,-220 A110,110 0 0,0 0,0 A110,110 0 0,1 0,220" fill="#fff" />
+
+      <circle cx="0" cy="-110" r="35" fill="#fff" />
+      <circle cx="0" cy="110" r="35" fill="#111" />
+      
+      <animateTransform
+        attributeName="transform"
+        attributeType="XML"
+        type="rotate"
+        from="0"
+        to="360"
+        dur="24s"
+        repeatCount="indefinite"
+      />
+    </g>
   </g>
 </svg>
