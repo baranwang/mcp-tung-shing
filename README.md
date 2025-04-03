@@ -1,7 +1,7 @@
 # 通胜 MCP 服务
 
 [![NPM Version](https://img.shields.io/npm/v/mcp-tung-shing.svg)](https://www.npmjs.com/package/mcp-tung-shing)
-[![License](https://img.shields.io/npm/l/mcp-tung-shing.svg)](https://github.com/username/mcp-tung-shing/blob/main/LICENSE)
+[![License](https://img.shields.io/npm/l/mcp-tung-shing.svg)](https://github.com/baranwang/mcp-tung-shing/blob/main/LICENSE)
 
 简体中文 | [English](./README.en.md)
 

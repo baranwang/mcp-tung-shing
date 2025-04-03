@@ -34,6 +34,7 @@
   "bugs": {
     "url": "https://github.com/baranwang/mcp-tung-shing/issues"
   },
+  "license": "MIT",
   "scripts": {
     "build": "rslib build",
     "check": "biome check --write",

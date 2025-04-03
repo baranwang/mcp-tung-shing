@@ -11,7 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      pull-requests: write
     steps:
       - uses: actions/checkout@v4
         with:
@@ -61,24 +60,8 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-
-      - if: steps.check-version.outputs.needs_update == 'true'
-        run: |
-          # 创建新分支
-          git checkout -b update-tyme4ts-${{ steps.check-version.outputs.latest_version }}
-          
-          # 添加更改
           git add package.json pnpm-lock.yaml .changeset/
-          git commit -m "chore: 更新 tyme4ts 到 v${{ steps.check-version.outputs.latest_version }}"
-          
-          # 推送到远程
-          git push -u origin update-tyme4ts-${{ steps.check-version.outputs.latest_version }}
-          
-          # 创建 PR
-          gh pr create \
-            --title "chore: 更新 tyme4ts 到 v${{ steps.check-version.outputs.latest_version }}" \
-            --body "自动更新 tyme4ts 版本从 v${{ steps.check-version.outputs.current_version }} 到 v${{ steps.check-version.outputs.latest_version }}" \
-            --base main \
-            --head update-tyme4ts-${{ steps.check-version.outputs.latest_version }}
+          git commit -m "chore: bump tyme4ts version to ${{ steps.check-version.outputs.latest_version }}"
+          git push origin main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
