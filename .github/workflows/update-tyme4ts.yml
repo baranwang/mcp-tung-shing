@@ -1,0 +1,84 @@
+name: Update tyme4ts
+
+on:
+  schedule:
+    # 每天 UTC 00:00 运行（相当于北京时间 08:00）
+    - cron: '0 0 * * *'
+  workflow_dispatch: # 允许手动触发
+
+jobs:
+  update-dependency:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - run: pnpm install
+
+      - id: check-version
+        run: |
+          # 获取当前依赖的版本
+          CURRENT_VERSION=$(node -p "require('./package.json').dependencies.tyme4ts.replace('^', '')")
+          echo "current_version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+          
+          # 获取最新版本
+          LATEST_VERSION=$(npm view tyme4ts version)
+          echo "latest_version=$LATEST_VERSION" >> $GITHUB_OUTPUT
+          
+          # 比较版本
+          if [ "$CURRENT_VERSION" != "$LATEST_VERSION" ]; then
+            echo "needs_update=true" >> $GITHUB_OUTPUT
+          else
+            echo "needs_update=false" >> $GITHUB_OUTPUT
+          fi
+
+      - if: steps.check-version.outputs.needs_update == 'true'
+        run: |
+          # 更新依赖版本
+          pnpm add tyme4ts@${{ steps.check-version.outputs.latest_version }}
+          
+          # 创建 changeset
+          cat << EOF > .changeset/update-tyme4ts.md
+          ---
+          "mcp-tung-shing": patch
+          ---
+          
+          bump tyme4ts version to ${{ steps.check-version.outputs.latest_version }}
+          EOF
+
+      - if: steps.check-version.outputs.needs_update == 'true'
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - if: steps.check-version.outputs.needs_update == 'true'
+        run: |
+          # 创建新分支
+          git checkout -b update-tyme4ts-${{ steps.check-version.outputs.latest_version }}
+          
+          # 添加更改
+          git add package.json pnpm-lock.yaml .changeset/
+          git commit -m "chore: 更新 tyme4ts 到 v${{ steps.check-version.outputs.latest_version }}"
+          
+          # 推送到远程
+          git push -u origin update-tyme4ts-${{ steps.check-version.outputs.latest_version }}
+          
+          # 创建 PR
+          gh pr create \
+            --title "chore: 更新 tyme4ts 到 v${{ steps.check-version.outputs.latest_version }}" \
+            --body "自动更新 tyme4ts 版本从 v${{ steps.check-version.outputs.current_version }} 到 v${{ steps.check-version.outputs.latest_version }}" \
+            --base main \
+            --head update-tyme4ts-${{ steps.check-version.outputs.latest_version }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
