@@ -40,7 +40,9 @@
     "dev": "rslib build --watch",
     "format": "biome format --write",
     "pretest": "rslib build",
-    "test": "vitest run"
+    "test": "vitest run",
+    "prerelease": "npm run build",
+    "release": "changeset publish"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.7.0",
