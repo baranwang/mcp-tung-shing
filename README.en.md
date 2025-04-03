@@ -1,5 +1,6 @@
 # Tung Shing MCP Server
 
+[![smithery badge](https://smithery.ai/badge/@baranwang/mcp-tung-shing)](https://smithery.ai/server/@baranwang/mcp-tung-shing)
 [![NPM Version](https://img.shields.io/npm/v/mcp-tung-shing.svg)](https://www.npmjs.com/package/mcp-tung-shing)
 [![License](https://img.shields.io/npm/l/mcp-tung-shing.svg)](https://github.com/username/mcp-tung-shing/blob/main/LICENSE)
 
