@@ -40,6 +40,7 @@
     "check": "biome check --write",
     "dev": "rslib build --watch",
     "format": "biome format --write",
+    "inspect": "mcp-inspector",
     "pretest": "rslib build",
     "test": "vitest run",
     "prerelease": "npm run build",
@@ -56,6 +57,7 @@
   "devDependencies": {
     "@biomejs/biome": "1.9.2",
     "@changesets/cli": "^2.28.1",
+    "@modelcontextprotocol/inspector": "^0.8.0",
     "@rslib/core": "^0.5.4",
     "@types/node": "^22.8.1",
     "typescript": "^5.7.3",
