@@ -1,5 +1,11 @@
 # mcp-tung-shing
 
+## 1.7.1
+
+### Patch Changes
+
+- e59abaf: 优化宜忌事项列表，过滤掉目前不会出现的类型
+
 ## 1.7.0
 
 ### Minor Changes
