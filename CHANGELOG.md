@@ -1,5 +1,11 @@
 # mcp-tung-shing
 
+## 1.6.0
+
+### Minor Changes
+
+- c446458: 更新公历日期格式为中文显示
+
 ## 1.5.0
 
 ### Minor Changes
