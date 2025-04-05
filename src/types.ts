@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { Taboo } from 'tyme4ts';
+import { getDayTabooNames } from './utils';
 
 export enum ContentType {
   宜 = '宜',
@@ -40,7 +40,7 @@ export interface DailyAlmanac {
 
 export const tabooFilterSchema = z.object({
   type: z.nativeEnum(TabooType).describe('过滤类型：宜(1)、忌(2)'),
-  value: z.enum(Taboo.NAMES as [string, ...string[]]).describe('要筛选的宜忌事项'),
+  value: z.enum(getDayTabooNames()).describe('要筛选的宜忌事项'),
 });
 
 export const getTungShingParamsSchema = z.object({

@@ -6,10 +6,10 @@ import {
   ListToolsRequestSchema,
 } from '@modelcontextprotocol/sdk/types.js';
 import dayjs from 'dayjs';
-import { Taboo } from 'tyme4ts';
 import { zodToJsonSchema } from 'zod-to-json-schema';
 import { getDailyAlmanac } from './almanac';
 import { ContentType, TabooType, getTungShingParamsSchema } from './types';
+import { getDayTabooNames } from './utils';
 
 /**
  * 创建并配置MCP服务器
@@ -133,7 +133,9 @@ export function createServer() {
               role: 'assistant',
               content: {
                 type: 'text',
-                text: `宜忌事项类型清单\n${Taboo.NAMES.map((name) => `- ${name}`).join('\n')}`,
+                text: `宜忌事项类型清单\n${getDayTabooNames()
+                  .map((name) => `- ${name}`)
+                  .join('\n')}`,
               },
             },
           ],
