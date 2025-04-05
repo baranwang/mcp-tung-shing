@@ -3,6 +3,7 @@ import { PluginLunar } from 'dayjs-plugin-lunar';
 import type { AlmanacContentItem, DailyAlmanac } from './types';
 import { ContentType } from './types';
 import { handleDirection } from './utils';
+import 'dayjs/locale/zh-cn.js';
 
 dayjs.extend(PluginLunar);
 
@@ -62,7 +63,7 @@ export function getDailyAlmanac(
   );
 
   const result: DailyAlmanac = {
-    公历: parsedDate.format('YYYY-MM-DD'),
+    公历: parsedDate.locale('zh-cn').format('YYYY 年 M 月 D日（ddd）'),
     农历: parsedDate.format('LY年LMLD'),
     节日: lunarDay.getFestival()?.getName(),
     节气: solarDay.getTermDay().toString(),
