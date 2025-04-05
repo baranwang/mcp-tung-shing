@@ -1,5 +1,11 @@
 # mcp-tung-shing
 
+## 1.5.0
+
+### Minor Changes
+
+- e934b68: 增加节日节气信息的输出
+
 ## 1.4.0
 
 ### Minor Changes
