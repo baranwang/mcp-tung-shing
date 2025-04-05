@@ -3,13 +3,13 @@ import {
   CallToolRequestSchema,
   GetPromptRequestSchema,
   ListPromptsRequestSchema,
-  ListToolsRequestSchema
+  ListToolsRequestSchema,
 } from '@modelcontextprotocol/sdk/types.js';
 import dayjs from 'dayjs';
 import { Taboo } from 'tyme4ts';
 import { zodToJsonSchema } from 'zod-to-json-schema';
 import { getDailyAlmanac } from './almanac';
-import { ContentType, getTungShingParamsSchema } from './types';
+import { ContentType, TabooType, getTungShingParamsSchema } from './types';
 
 /**
  * 创建并配置MCP服务器
@@ -43,8 +43,12 @@ export function createServer() {
   mcpServer.server.setRequestHandler(CallToolRequestSchema, async (request) => {
     switch (request.params.name) {
       case 'get-tung-shing': {
-        const { startDate, days, taboo, includeHours } =
-          getTungShingParamsSchema.parse(request.params.arguments);
+        const {
+          startDate,
+          days,
+          includeHours,
+          tabooFilters = [],
+        } = getTungShingParamsSchema.parse(request.params.arguments);
         const start = dayjs(startDate);
         if (!start.isValid()) {
           return {
@@ -63,7 +67,7 @@ export function createServer() {
             const almanac = getDailyAlmanac(start.add(i, 'day'), includeHours);
 
             // 如果没有指定taboo过滤，直接返回结果
-            if (!taboo) {
+            if (!tabooFilters.length) {
               return {
                 type: 'text',
                 text: JSON.stringify(almanac),
@@ -71,16 +75,23 @@ export function createServer() {
             }
 
             // 提取宜忌内容
-            const recommends = almanac.当日[ContentType.宜] || [];
-            const avoids = almanac.当日[ContentType.忌] || [];
+            const recommends = (almanac.当日[ContentType.宜] as string[]) || [];
+            const avoids = (almanac.当日[ContentType.忌] as string[]) || [];
 
-            // 根据taboo类型进行过滤
-            const matchesRecommends =
-              taboo.type & 1 && recommends.includes(taboo.value);
-            const matchesAvoids =
-              taboo.type & 2 && avoids.includes(taboo.value);
+            // 根据tabooFilters进行过滤，条件之间为或的关系
+            const hasMatch = tabooFilters.some((filter) => {
+              // 宜事项过滤
+              if (filter.type === TabooType.宜) {
+                return recommends.includes(filter.value);
+              }
+              // 忌事项过滤
+              if (filter.type === TabooType.忌) {
+                return avoids.includes(filter.value);
+              }
+              return false;
+            });
 
-            if (matchesRecommends || matchesAvoids) {
+            if (hasMatch) {
               return {
                 type: 'text',
                 text: JSON.stringify(almanac),

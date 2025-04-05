@@ -24,7 +24,7 @@ export function getHourlyAlmanac(date: dayjs.Dayjs): AlmanacContentItem {
       .getEcliptic()
       .getLuck()
       .toString(),
-    [ContentType.星神]: lunarHour.getTwelveStar().toString(),
+    [ContentType.值神]: lunarHour.getTwelveStar().toString(),
     [ContentType.五行]: sixtyCycle.getSound().toString(),
     [ContentType.冲煞]: `冲${earthBranch.getOpposite().getZodiac()}煞${earthBranch.getOminous()}`,
     [ContentType.方位]: [

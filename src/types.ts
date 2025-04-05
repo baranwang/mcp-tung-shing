@@ -13,14 +13,12 @@ export enum ContentType {
   吉神宜趋 = '吉神宜趋',
   凶煞宜忌 = '凶煞宜忌',
   彭祖百忌 = '彭祖百忌',
-  星神 = '星神',
   方位 = '方位',
 }
 
 export enum TabooType {
   宜 = 1,
   忌 = 2,
-  宜忌 = 3,
 }
 
 export interface AlmanacContentItem {
@@ -39,13 +37,10 @@ export interface DailyAlmanac {
     | undefined;
 }
 
+
 export const tabooFilterSchema = z.object({
-  type: z
-    .nativeEnum(TabooType)
-    .describe('过滤类型：宜(1)、忌(2)或两者都包含(3)'),
-  value: z
-    .enum(Taboo.NAMES as [string, ...string[]])
-    .describe('要筛选的宜忌事项'),
+  type: z.nativeEnum(TabooType).describe('过滤类型：宜(1)、忌(2)'),
+  value: z.enum(Taboo.NAMES as [string, ...string[]]).describe('要筛选的宜忌事项'),
 });
 
 export const getTungShingParamsSchema = z.object({
@@ -70,5 +65,8 @@ export const getTungShingParamsSchema = z.object({
     .optional()
     .default(false)
     .describe('是否包含时辰信息'),
-  taboo: tabooFilterSchema.optional().describe('筛选宜忌事项'),
+  tabooFilters: z
+    .array(tabooFilterSchema)
+    .optional()
+    .describe('多个筛选宜忌事项，条件之间为或关系'),
 });

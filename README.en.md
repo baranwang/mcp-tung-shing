@@ -2,7 +2,7 @@
 
 [![smithery badge](https://smithery.ai/badge/@baranwang/mcp-tung-shing)](https://smithery.ai/server/@baranwang/mcp-tung-shing)
 [![NPM Version](https://img.shields.io/npm/v/mcp-tung-shing.svg)](https://www.npmjs.com/package/mcp-tung-shing)
-[![License](https://img.shields.io/npm/l/mcp-tung-shing.svg)](https://github.com/username/mcp-tung-shing/blob/main/LICENSE)
+[![License](https://img.shields.io/npm/l/mcp-tung-shing.svg)](https://github.com/baranwang/mcp-tung-shing/blob/main/LICENSE)
 
 [中文文档](./README.md) | English
 
@@ -43,12 +43,12 @@ Get almanac information for specified date(s)
 
 | Parameter | Type | Required | Default | Description |
 |-----------|------|----------|---------|-------------|
-| `startDate` | String | Yes | - | Start date, format: "YYYY-MM-DD" |
+| `startDate` | String | No | Today | Start date, format: "YYYY-MM-DD" |
 | `days` | Number | No | 1 | Number of days to retrieve |
 | `includeHours` | Boolean | No | false | Whether to include hourly information |
-| `taboo` | Object | No | - | Filter for recommended and avoided activities |
-| `taboo.type` | 1 \| 2 \| 3 | Yes | - | Filter type: recommends(1), avoids(2), or both(3) |
-| `taboo.value` | String | Yes | - | The activity to filter |
+| `tabooFilters` | Array | No | - | Filter for recommended and avoided activities, conditions are in OR relationship |
+| `tabooFilters[].type` | 1 \| 2 | Yes | - | Filter type: recommends(1), avoids(2) |
+| `tabooFilters[].value` | String | Yes | - | The activity to filter |
 
 ## 🤝 Contributing
 
