@@ -11,7 +11,7 @@
 ## ✨ Features
 
 - 📅 **Calendar Conversion** - Convert between Gregorian and Chinese lunar calendar
-- 🍀 **Daily Guidance** - Detailed information on auspicious and inauspicious activities for each day
+- 🍀 **Daily Guidance** - Detailed information on recommended and avoided activities for each day
 - 🕐 **Time Periods** - Fortune information for the twelve traditional Chinese time periods
 - 🔮 **Metaphysical Elements** - Detailed data on five elements, deities, star constellations and other traditional metaphysical information
 
@@ -33,7 +33,7 @@ Add the following to your MCP configuration file:
 }
 ```
 
-## 📖 API Documentation
+## ⚙️ Tools
 
 ### get-tung-shing
 
@@ -45,6 +45,10 @@ Get almanac information for specified date(s)
 |-----------|------|----------|---------|-------------|
 | `startDate` | String | Yes | - | Start date, format: "YYYY-MM-DD" |
 | `days` | Number | No | 1 | Number of days to retrieve |
+| `includeHours` | Boolean | No | false | Whether to include hourly information |
+| `taboo` | Object | No | - | Filter for recommended and avoided activities |
+| `taboo.type` | 1 \| 2 \| 3 | Yes | - | Filter type: recommends(1), avoids(2), or both(3) |
+| `taboo.value` | String | Yes | - | The activity to filter |
 
 ## 🤝 Contributing
 

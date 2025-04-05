@@ -1,18 +1,21 @@
-import { Server } from '@modelcontextprotocol/sdk/server/index.js';
+import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import {
   CallToolRequestSchema,
-  ListToolsRequestSchema,
+  GetPromptRequestSchema,
+  ListPromptsRequestSchema,
+  ListToolsRequestSchema
 } from '@modelcontextprotocol/sdk/types.js';
-import { zodToJsonSchema } from 'zod-to-json-schema';
 import dayjs from 'dayjs';
-import { ContentType, getTungShingParamsSchema } from './types';
+import { Taboo } from 'tyme4ts';
+import { zodToJsonSchema } from 'zod-to-json-schema';
 import { getDailyAlmanac } from './almanac';
+import { ContentType, getTungShingParamsSchema } from './types';
 
 /**
  * 创建并配置MCP服务器
  */
 export function createServer() {
-  const server = new Server(
+  const mcpServer = new McpServer(
     {
       name: 'Tung Shing',
       version: process.env.PACKAGE_VERSION ?? '0.0.0',
@@ -20,23 +23,24 @@ export function createServer() {
     {
       capabilities: {
         tools: {},
+        prompts: {},
       },
     },
   );
 
   // 注册工具列表处理器
-  server.setRequestHandler(ListToolsRequestSchema, () => ({
+  mcpServer.server.setRequestHandler(ListToolsRequestSchema, () => ({
     tools: [
       {
         name: 'get-tung-shing',
-        description: 'Get the daily almanac from Tung Shing',
+        description: '获取通胜黄历，包括公历、农历、宜忌、吉凶、冲煞等信息',
         inputSchema: zodToJsonSchema(getTungShingParamsSchema),
       },
     ],
   }));
 
   // 注册工具调用处理器
-  server.setRequestHandler(CallToolRequestSchema, async (request) => {
+  mcpServer.server.setRequestHandler(CallToolRequestSchema, async (request) => {
     switch (request.params.name) {
       case 'get-tung-shing': {
         const { startDate, days, taboo, includeHours } =
@@ -100,5 +104,37 @@ export function createServer() {
     }
   });
 
-  return server;
+  mcpServer.server.setRequestHandler(ListPromptsRequestSchema, () => ({
+    prompts: [
+      {
+        name: 'get-taboo',
+        description: '获取宜忌事项类型',
+      },
+    ],
+  }));
+
+  mcpServer.server.setRequestHandler(GetPromptRequestSchema, (request) => {
+    switch (request.params.name) {
+      case 'get-taboo': {
+        return {
+          messages: [
+            {
+              role: 'assistant',
+              content: {
+                type: 'text',
+                text: `宜忌事项类型清单\n${Taboo.NAMES.map((name) => `- ${name}`).join('\n')}`,
+              },
+            },
+          ],
+        };
+      }
+      default: {
+        return {
+          messages: [],
+        };
+      }
+    }
+  });
+
+  return mcpServer;
 }

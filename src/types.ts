@@ -32,6 +32,11 @@ export interface DailyAlmanac {
   农历: string;
   当日: AlmanacContentItem;
   分时?: Record<string, AlmanacContentItem>;
+  [key: string]:
+    | string
+    | AlmanacContentItem
+    | Record<string, AlmanacContentItem>
+    | undefined;
 }
 
 export const tabooFilterSchema = z.object({

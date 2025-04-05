@@ -38,30 +38,35 @@ export function getHourlyAlmanac(date: dayjs.Dayjs): AlmanacContentItem {
  * 获取每日黄历信息
  */
 export function getDailyAlmanac(
-  date?: dayjs.Dayjs,
+  date: dayjs.Dayjs,
   includeHours = false,
 ): DailyAlmanac {
-  const parsedDate = date ? dayjs(date) : dayjs();
+  const parsedDate = dayjs(date);
   if (!parsedDate.isValid()) {
     throw new Error('Invalid date');
   }
 
   const lunarDay = parsedDate.toLunarDay();
+  const solarDay = lunarDay.getSolarDay();
   const sixtyCycle = lunarDay.getSixtyCycle();
   const earthBranch = sixtyCycle.getEarthBranch();
   const twentyEightStar = lunarDay.getTwentyEightStar();
-  const gods = lunarDay.getGods();
-
-  // 分类神煞
-  const goodGods: string[] = [];
-  const badGods: string[] = [];
-  for (const god of gods) {
-    (god.getLuck().getName() === '吉' ? goodGods : badGods).push(god.getName());
-  }
+  const gods = lunarDay.getGods().reduce(
+    (acc, god) => {
+      const category =
+        god.getLuck().getName() === '吉' ? 'auspicious' : 'inauspicious';
+      acc[category].push(god.getName());
+      return acc;
+    },
+    { auspicious: [] as string[], inauspicious: [] as string[] },
+  );
 
   const result: DailyAlmanac = {
     公历: parsedDate.format('YYYY-MM-DD'),
     农历: parsedDate.format('LY年LMLD'),
+    节日: lunarDay.getFestival()?.getName(),
+    节气: solarDay.getTermDay().toString(),
+    七十二候: solarDay.getPhenologyDay().toString(),
     当日: {
       [ContentType.宜]: lunarDay.getRecommends().map((item) => item.getName()),
       [ContentType.忌]: lunarDay.getAvoids().map((item) => item.getName()),
@@ -75,8 +80,8 @@ export function getDailyAlmanac(
       [ContentType.值神]: lunarDay.getTwelveStar().toString(),
       [ContentType.建除十二神]: lunarDay.getDuty().toString(),
       [ContentType.二十八星宿]: `${twentyEightStar}${twentyEightStar.getSevenStar()}${twentyEightStar.getAnimal()}（${twentyEightStar.getLuck()}）`,
-      [ContentType.吉神宜趋]: goodGods,
-      [ContentType.凶煞宜忌]: badGods,
+      [ContentType.吉神宜趋]: gods.auspicious,
+      [ContentType.凶煞宜忌]: gods.inauspicious,
       [ContentType.彭祖百忌]: `${sixtyCycle.getHeavenStem().getPengZuHeavenStem()} ${earthBranch.getPengZuEarthBranch()}`,
     },
   };
