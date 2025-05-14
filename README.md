@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/baranwang-mcp-tung-shing-badge.png)](https://mseep.ai/app/baranwang-mcp-tung-shing)
+
 # 通胜 MCP 服务
 
 [![smithery badge](https://smithery.ai/badge/@baranwang/mcp-tung-shing)](https://smithery.ai/server/@baranwang/mcp-tung-shing)
