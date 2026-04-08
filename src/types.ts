@@ -14,6 +14,7 @@ export enum ContentType {
   凶煞宜忌 = '凶煞宜忌',
   彭祖百忌 = '彭祖百忌',
   方位 = '方位',
+  干支 = '干支',
 }
 
 export enum TabooType {
@@ -22,7 +23,7 @@ export enum TabooType {
 }
 
 export interface AlmanacContentItem {
-  [key: string]: string | string[];
+  [key: string]: string | string[] | { 年: string; 月: string; 日: string };
 }
 
 export interface DailyAlmanac {

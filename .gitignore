@@ -11,3 +11,8 @@ dist/
 .vscode/*
 !.vscode/extensions.json
 .idea
+
+# AI
+.opencode/
+.trellis/
+AGENTS.md

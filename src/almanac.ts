@@ -32,6 +32,11 @@ export function getHourlyAlmanac(date: dayjs.Dayjs): AlmanacContentItem {
       `财神${handleDirection(heavenStem.getWealthDirection().toString())}`,
       `福神${handleDirection(heavenStem.getMascotDirection().toString())}`,
     ],
+    [ContentType.干支]: {
+        年: lunarHour.getEightChar().getYear().toString(),
+        月: lunarHour.getEightChar().getMonth().toString(),
+        日: lunarHour.getEightChar().getDay().toString(),
+      },
   };
 }
 
@@ -50,6 +55,7 @@ export function getDailyAlmanac(
   const lunarDay = parsedDate.toLunarDay();
   const solarDay = lunarDay.getSolarDay();
   const sixtyCycle = lunarDay.getSixtyCycle();
+  const heavenStem = sixtyCycle.getHeavenStem();
   const earthBranch = sixtyCycle.getEarthBranch();
   const twentyEightStar = lunarDay.getTwentyEightStar();
   const gods = lunarDay.getGods().reduce(
@@ -84,6 +90,11 @@ export function getDailyAlmanac(
       [ContentType.吉神宜趋]: gods.auspicious,
       [ContentType.凶煞宜忌]: gods.inauspicious,
       [ContentType.彭祖百忌]: `${sixtyCycle.getHeavenStem().getPengZuHeavenStem()} ${earthBranch.getPengZuEarthBranch()}`,
+      [ContentType.干支]: {
+        年: lunarDay.getThreePillars().getYear().toString(),
+        月: lunarDay.getThreePillars().getMonth().toString(),
+        日: lunarDay.getThreePillars().getDay().toString(),
+      },
     },
   };
 
